@@ -19,6 +19,8 @@ const getReplacedTweets = function (screenName) {
             return tweets.filter(tweet => {
                 return tweet.id !== latestRead
             })
+        }).catch(error => {
+            console.log(error);
         })
     }).then(results => {
         if (results && results.length) {
