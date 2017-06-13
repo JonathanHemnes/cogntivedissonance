@@ -1,5 +1,6 @@
 module.exports = [
     'cnn',
     'msnbc',
-    'foxnews'
+    'foxnews',
+    'abcnews'
 ]

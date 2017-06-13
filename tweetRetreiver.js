@@ -12,10 +12,21 @@ const client = new Twitter({
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
+const buildTimelineQueryParams = function (screenName, latestRead) {
+    let params = {
+        screen_name: screenName
+    }
+    if (latestRead) {
+        params.since_id = latestRead
+    }
+    return params;
+}
+
 const getReplacedTweets = function (screenName) {
 
     return getLatestReadTweet(screenName).then(latestRead => {
-        return client.get('statuses/user_timeline', { screen_name: screenName, since_id: latestRead }).then(tweets => {
+        const params = buildTimelineQueryParams(screenName, latestRead);
+        return client.get('statuses/user_timeline', params).then(tweets => {
             return tweets.filter(tweet => {
                 return tweet.id !== latestRead
             })
@@ -29,8 +40,8 @@ const getReplacedTweets = function (screenName) {
                 .then(replaceTrumpWithClinton)
                 .then(removeUrlsFromTweets);
         } else {
-            console.log('no new tweets');
-            return Promise.resolve()
+            console.log(`no new tweets for ${screenName}`);
+            return Promise.resolve([])
         }
     })
 
@@ -86,4 +97,30 @@ const replaceTrumpWithClinton = function (tweets) {
     })
 }
 
-module.exports = getReplacedTweets;
+const sendTweets = function (tweets) {
+    return Promise.all(tweets.map(tweet => {
+        return client.post('statuses/update', {
+            status: tweet.text,
+            in_reply_to_status_id: tweet.id
+        }).then(result => {
+            console.log(result);
+        }).catch(error => {
+            console.log(error);
+        })
+    }))
+}
+
+const sendTestTweet = function() {
+    return client.post('statuses/update', {
+            status: 'hello',
+            // in_reply_to_status_id: tweet.id
+        }).then(result => {
+            console.log(result);
+        })
+}
+
+module.exports = {
+    getReplacedTweets,
+    sendTweets,
+    sendTestTweet
+}
