@@ -12,6 +12,7 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "dotenv": "^4.0.0",
+    "sqlite": "^2.8.0",
     "twitter": "^1.7.0"
   }
 }

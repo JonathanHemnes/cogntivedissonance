@@ -9,13 +9,20 @@ const client = new Twitter({
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-const getReplacedTweets = function () {
-    return client.get('statuses/user_timeline', { screen_name: 'cnn' }).then(results => {
-        return getDonaldTrumpRelatedTweets(results)
+const getReplacedTweets = function (screenName) {
+    return client.get('statuses/user_timeline', { screen_name: screenName }).then(results => {
+        return setLatestReadTweet(screenName, results[0].id, results)
+            .then(getDonaldTrumpRelatedTweets)
             .then(replaceTrumpWithClinton)
             .then(removeUrlsFromTweets);
     })
 
+}
+
+const setLatestReadTweet = function (screenName, id, results) {
+    return new Promise((resolve, reject) => {
+        resolve(results)
+    })
 }
 
 const removeUrlsFromTweets = function (tweets) {
