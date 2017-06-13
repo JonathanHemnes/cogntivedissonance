@@ -2,6 +2,9 @@ require('dotenv').config()
 const Promise = require('bluebird');
 const Twitter = require('twitter');
 
+var Database = require('better-sqlite3');
+var db = new Database('database.sqlite', {});
+
 const client = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
     consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -10,18 +13,38 @@ const client = new Twitter({
 });
 
 const getReplacedTweets = function (screenName) {
-    return client.get('statuses/user_timeline', { screen_name: screenName }).then(results => {
-        return setLatestReadTweet(screenName, results[0].id, results)
-            .then(getDonaldTrumpRelatedTweets)
-            .then(replaceTrumpWithClinton)
-            .then(removeUrlsFromTweets);
+
+    return getLatestReadTweet(screenName).then(latestRead => {
+        return client.get('statuses/user_timeline', { screen_name: screenName, since_id: latestRead }).then(tweets => {
+            return tweets.filter(tweet => {
+                return tweet.id !== latestRead
+            })
+        })
+    }).then(results => {
+        if (results && results.length) {
+            return setLatestReadTweet(screenName, results[0].id, results)
+                .then(getDonaldTrumpRelatedTweets)
+                .then(replaceTrumpWithClinton)
+                .then(removeUrlsFromTweets);
+        } else {
+            console.log('no new tweets');
+            return Promise.resolve()
+        }
     })
 
 }
 
+const getLatestReadTweet = function (screenName) {
+    return new Promise((resolve, reject) => {
+        let result = db.prepare('SELECT LatestRead FROM Tweet WHERE ScreenName = ?').get(screenName)
+        resolve(result.LatestRead)
+    })
+}
+
 const setLatestReadTweet = function (screenName, id, results) {
     return new Promise((resolve, reject) => {
-        resolve(results)
+        db.prepare(`UPDATE Tweet SET LatestRead = ? WHERE ScreenName = ?`).run(id, screenName);
+        resolve(results);
     })
 }
 
