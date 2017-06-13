@@ -16,7 +16,7 @@ setTimeout(() => {
         tweetRetreiver.getReplacedTweets(source).then(tweets => {
             return new Promise((resolve, reject) => {
                 const newTweets = tweets.map(tweet => {
-                    tweet.text = `@${source} ${tweet.text.trim()}?`
+                    tweet.text = `@${source} ${tweet.text.trim()}`
                     console.log(tweet)
                     return tweet;
                 })
