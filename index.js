@@ -14,15 +14,19 @@ setTimeout(() => {
         console.log(`Fetching tweets for ${source}`)
         createSourceIfNotExists(source);
         tweetRetreiver.getReplacedTweets(source).then(tweets => {
-            return Promise.resolve(tweets.map(tweet => {
-                tweet.text = `@${source} what if ${tweet.text}?`
-                console.log(tweet)
-            }))
+            return new Promise((resolve, reject) => {
+                const newTweets = tweets.map(tweet => {
+                    tweet.text = `@${source} ${tweet.text.trim()}?`
+                    console.log(tweet)
+                    return tweet;
+                })
+                resolve(newTweets);
+            })
         }).then(tweets => {
             tweetRetreiver.sendTweets(tweets);
         })
     })
-}, 1000 * 30)
+}, 1000 * 1)
 
 
 
