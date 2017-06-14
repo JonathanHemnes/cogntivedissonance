@@ -89,6 +89,9 @@ const replaceTrumpWithClinton = function (tweets) {
             if (tweet.text.includes('Melania')) {
                 tweet.text = tweet.text.replace('Melania', 'Bill');
             }
+            if (tweet.text.includes('Ivanka')) {
+                tweet.text = tweet.text.replace('Ivanka', 'Chelsea');
+            }
             if (tweet.text.includes('Trump')) {
                 tweet.text = tweet.text.replace('Trump', 'Clinton');
             }

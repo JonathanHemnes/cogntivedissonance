@@ -7,5 +7,10 @@ module.exports = [
     'washingtonpost',
     'politico',
     'fivethirtyeight',
-    'slate'
+    'slate',
+    'denverpost',
+    'AP_Politics',
+    'nprpolitics',
+    'HuffPostPol',
+    'BreitbartNews'
 ]
