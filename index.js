@@ -26,7 +26,7 @@ setTimeout(() => {
             tweetRetreiver.sendTweets(tweets);
         })
     })
-}, 1000 * 1)
+}, 1000 * 10)
 
 
 
