@@ -2,5 +2,10 @@ module.exports = [
     'cnn',
     'msnbc',
     'foxnews',
-    'abcnews'
+    'abcnews',
+    'nytimes',
+    'washingtonpost',
+    'politico',
+    'fivethirtyeight',
+    'slate'
 ]
