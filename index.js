@@ -9,7 +9,7 @@ const createSourceIfNotExists = function (screenName) {
     db.prepare('INSERT INTO Tweet(ScreenName) SELECT ? WHERE NOT EXISTS(SELECT 1 FROM Tweet WHERE screenName = ?);').run(screenName, screenName)
 }
 
-setTimeout(() => {
+setInterval(() => {
     sources.forEach(source => {
         console.log(`Fetching tweets for ${source}`)
         createSourceIfNotExists(source);
