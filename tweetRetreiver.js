@@ -15,7 +15,7 @@ const client = new Twitter({
 const buildTimelineQueryParams = function (screenName, latestRead) {
     let params = {
         screen_name: screenName
-    }
+    } 
     if (latestRead) {
         params.since_id = latestRead
     }
